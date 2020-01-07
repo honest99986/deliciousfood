@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>食譜列表</title>
+	<meta charset="utf-8">
+	<!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+    <link type="text/css" rel="stylesheet" href="main.css" media="screen,projection"/>
+</head>
+<body>
+	<nav class="nav-extended teal lighten-2">
+		<div class="nav-wrapper">
+			<a href="index.html" class="brand-logo">食譜列表</a>
+			<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+			<ul id="nav-mobile" class="right hide-on-med-and-down">
+				<li><a href="index.html">食譜列表</a></li>
+				<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+				<li><a href="playlists.html">精選播放清單</a></li>
+				<li><a href="shops.html">附近商店</a></li>
+			</ul>
+		</div>
+		<div class="nav-content">
+			<ul class="tabs tabs-transparent">
+				<li class="tab"><a href="javascript:ShowSomeRecipes('all')">全部</a></li>
+				<li class="tab"><a href="javascript:ShowSomeRecipes('main')">主菜</a></li>
+				<li class="tab"><a href="javascript:ShowSomeRecipes('soup')">湯品</a></li>
+				<li class="tab"><a href="javascript:ShowSomeRecipes('dessert')">點心</a></li>
+				<li class="tab"><a href="javascript:ShowSomeRecipes('other')">其他</a></li>
+			</ul>
+		</div>
+	</nav>
+	<ul class="sidenav" id="mobile-demo">
+		<li><a href="index.html">食譜列表</a></li>
+		<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+		<li><a href="playlists.html">精選播放清單</a></li>
+		<li><a href="shops.html">附近商店</a></li>
+	</ul>
+	<ul class="collection">
+		<div id="recipes"></div>
+		<a href="addRecipes.html">
+			<li class="collection-item avatar">
+				<i class="material-icons circle">add_circle</i>
+				<span class="title"><b>新增食譜</b></span>
+				<i class="material-icons secondary-content">keyboard_arrow_right</i>
+			</li>
+		</a>
+	</ul>
+	<!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript">
+    	var data;
+		var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1jtD4hbCmpvn_ZaC1bsKzTh_Rdg22cVdkul7A3adA4Ks/edit?usp=sharing';
+		function init() {
+			Tabletop.init( { key: publicSpreadsheetUrl,
+			    callback: ShowRecipes,
+			    simpleSheet: true } )
+		}
+    	function ShowRecipes(tempData,tabletop){			
+			data=tempData;
+			console.log(data);
+			var text="";
+			for(var i=0;i<data.length;i++){
+				text+="<a href='showRecipes.html?id="+i+"'>";
+				text+="<li class='collection-item avatar'>";
+				if(data[i].img=="")
+					text+="<i class='material-icons circle'>image</i>";
+				else
+					text+="<img src='"+data[i].img+"' alt='' class='circle'>";
+				text+="<span class='title'><b>"+data[i].name+"</b></span>";
+				text+="<i class='material-icons secondary-content'>chevron_right</i>";
+				text+="</li>";
+				text+="</a>";	
+			}
+			document.getElementById("recipes").innerHTML=text;
+    	}
+    	function ShowSomeRecipes(category){
+			var text="";
+			for(var i=0;i<data.length;i++){
+				if(data[i].category==category||category=="all"){
+					text+="<a href='showRecipes.html?id="+i+"'>";
+					text+="<li class='collection-item avatar'>";
+					if(data[i].img=="")
+						text+="<i class='material-icons circle'>image</i>";
+					else
+						text+="<img src='"+data[i].img+"' alt='' class='circle'>";
+					text+="<span class='title'><b>"+data[i].name+"</b></span>";
+					text+="<i class='material-icons secondary-content'>keyboard_arrow_right</i>";
+					text+="</li>";
+					text+="</a>";	
+				}	
+			}
+			document.getElementById("recipes").innerHTML=text;
+    	}
+    	document.addEventListener("DOMContentLoaded",init());
+    </script>
+</body>
+</html>

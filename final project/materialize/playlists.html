@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>精選播放清單</title>
+	<meta charset="utf-8">
+	<!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+    <link type="text/css" rel="stylesheet" href="main.css" media="screen,projection"/>
+</head>
+<body>
+	<nav class="nav-extended teal lighten-2">
+		<div class="nav-wrapper">
+			<a href="index.html" class="brand-logo">精選播放清單</a>
+			<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+			<ul id="nav-mobile" class="right hide-on-med-and-down">
+				<li><a href="index.html">食譜列表</a></li>
+				<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+				<li><a href="playlists.html">精選播放清單</a></li>
+				<li><a href="shops.html">附近商店</a></li>
+			</ul>
+		</div>
+	</nav>
+	<ul class="sidenav" id="mobile-demo">
+		<li><a href="index.html">食譜列表</a></li>
+		<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+		<li><a href="playlists.html">精選播放清單</a></li>
+		<li><a href="shops.html">附近商店</a></li>
+	</ul>
+	<ul class="collection">
+		<div id="shops"></div>
+		<a href="javascript:AddPlaylists()">
+			<li class="collection-item avatar">
+				<i class="material-icons circle">playlist_add</i>
+				<span class="title"><b>新增播放清單</b></span>
+				<i class="material-icons secondary-content" id="addPlaylistsIcon">keyboard_arrow_right</i>
+			</li>
+		</a>
+	</ul>
+	<div class="row" id="addPlaylists" style="visibility: hidden;">
+		<form class="col s12">
+			<div class="row">
+				<div class="input-field col s12">
+				  <input id="name" type="text" class="validate">
+				  <label for="name">播放清單名稱</label>
+				</div>	
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+				  <input id="id" type="text" class="validate">
+				  <label for="id">播放清單編號</label>
+				</div>
+			</div>
+		</form>
+		<a class="waves-effect waves-light btn" href="javascript:Submit()"><i class="material-icons right">chevron_right</i>新增</a>
+	</div>
+	<script type="text/javascript">
+		function AddPlaylists(){
+			if(document.getElementById("addPlaylists").style.visibility=="hidden"){
+				document.getElementById("addPlaylists").style.visibility="visible";
+				document.getElementById("addPlaylistsIcon").innerHTML="keyboard_arrow_down";
+			}
+			else{
+				document.getElementById("addPlaylists").style.visibility="hidden";
+				document.getElementById("addPlaylistsIcon").innerHTML="keyboard_arrow_right";
+			}
+		}
+		function Submit(){
+			var name=document.getElementById("name").value;
+			name=name.trim();
+			name=name.replace(/ /g,"+");
+			var id=document.getElementById("id").value;
+			id=id.trim();
+			id=id.replace(/ /g,"+");
+			if(name=="")
+				window.alert("播放清單名稱不可空白");
+			else if(id=="")
+				window.alert("播放清單編號不可空白");
+			else{
+				var url="https://docs.google.com/forms/d/e/1FAIpQLSeWciyqPHaiVDWDqJG28ci4FGV8V0zbtGyhTZlUenl6n2fZtw/formResponse?usp=pp_url&entry.1622122057="+name+"&entry.2032607581="+id;
+				window.open(url);
+				window.location.href="";
+			}
+		}	
+	</script>
+	<!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript">
+    	var data;
+		var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1fc-J1Lf1qyAWTJyf2w1zLX4N3R0GDV-2QTxtOxTClsU/edit?usp=sharing';
+		function init() {
+		Tabletop.init( { key: publicSpreadsheetUrl,
+		    callback: ShowPlaylists,
+		    simpleSheet: true } )
+		}
+    	function ShowPlaylists(tempData,tabletop){			
+			data=tempData;
+			console.log(data);
+			var text="";
+			for(var i=0;i<data.length;i++){
+				text+="<a href='videos.html?id="+data[i].id+"'>";
+				text+="<li class='collection-item avatar'>";
+				text+="<i class='material-icons circle'>playlist_play</i>";
+				text+="<span class='title'><b>"+data[i].name+"</b></span>";
+				text+="<i class='material-icons secondary-content'>chevron_right</i>";
+				text+="</li>";
+				text+="</a>";	
+			}
+			document.getElementById("shops").innerHTML=text;
+    	}
+    	document.addEventListener("DOMContentLoaded",init());
+    </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+		<!--Import Google Icon Font-->
+	    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	    <!--Import materialize.css-->
+	    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+	    <!--Let browser know website is optimized for mobile-->
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	    <script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+	    <link type="text/css" rel="stylesheet" href="main.css" media="screen,projection"/>
+		<script>
+			var data;
+	    	var id;
+			var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1jtD4hbCmpvn_ZaC1bsKzTh_Rdg22cVdkul7A3adA4Ks/edit?usp=sharing';
+			var xmlhttp = new XMLHttpRequest();
+			var url;	
+			var myObj;
+			function init() {
+				Tabletop.init( { key: publicSpreadsheetUrl,
+				    callback: GetPixnetSearch,
+				    simpleSheet: true } )
+			}
+	    	function GetPixnetSearch(tempData,tabletop){			
+	    		id=GetUrlVar("id");
+				data=tempData;
+				console.log(data);
+				document.title=data[id].name;
+				document.getElementById("logo").innerHTML=data[id].name;
+				url = "https://emma.pixnet.cc/blog/articles/search?api_version=2&format=json&key="+data[id].name;	
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+						myObj = JSON.parse(xmlhttp.responseText);
+						ShowPixnetSearch();
+					}			
+				}
+				xmlhttp.open("GET", url, true);
+				xmlhttp.send();
+	    	}	
+			function ShowPixnetSearch() {
+				console.log(myObj);
+				var text = "";
+				for (var i=0;i<myObj.articles.length;i++){
+					if(myObj.articles[i].site_category_id==27){
+						text+="<a target='_blank' href='"+myObj.articles[i].link+"'>";
+						text+="<li class='collection-item avatar'>";
+						if(myObj.articles[i].thumb!="")
+							text += "<img src='"+myObj.articles[i].thumb+"' alt='' class='circle'>";
+						else
+							text += "<i class='material-icons circle'>mms</i>";
+						if(myObj.articles[i].title!="")
+							text += "<span class='title'><b>"+myObj.articles[i].title+"</b></span>";
+						else
+							text += "<span class='title'>無標題文章</span>";
+						text+="<i class='material-icons secondary-content'>keyboard_arrow_right</i>";
+						text+="</li>";
+						text+="</a>";
+					}					
+				}
+				document.getElementById("pixnetHot").innerHTML = text;
+			}
+	    	function GetUrlVar(VarName){
+				name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+				var regexS = "[\\?&]" + VarName + "=([^&#]*)";
+				var regex = new RegExp(regexS);
+				var results = regex.exec(window.location.href);
+				if (results == null)
+				 	return "";
+				else
+					return results[1];
+			}
+			document.addEventListener("DOMContentLoaded",init());
+		</script>
+	</head>
+	<body>
+		<nav class="nav-extended teal lighten-2">
+		    <div class="nav-wrapper">
+			    <a id="logo" href="index.html" class="brand-logo">&nbsp;</a>
+			    <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+			    <ul id="nav-mobile" class="right hide-on-med-and-down">
+			    	<li><a href="index.html">食譜列表</a></li>
+					<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+					<li><a href="playlists.html">精選播放清單</a></li>
+					<li><a href="shops.html">附近商店</a></li>
+				</ul>
+		    </div>
+		</nav>
+		<ul class="sidenav" id="mobile-demo">
+			<li><a href="index.html">食譜列表</a></li>
+		    <li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+		    <li><a href="playlists.html">精選播放清單</a></li>
+		    <li><a href="shops.html">附近商店</a></li>
+		</ul>
+		<ul class="collection">
+			<div id="pixnetHot">
+				<li class="collection-item avatar">
+					<i class="material-icons circle">search</i>
+					<span class="title"><b>搜尋中</b></span>
+				</li>
+			</div>
+		</ul>
+		<!--JavaScript at end of body for optimized loading-->
+	    <script type="text/javascript" src="js/materialize.min.js"></script>
+	</body>
+</html>

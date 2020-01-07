@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>新增食譜</title>
+		<meta charset="utf-8">
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+		<!--Let browser know website is optimized for mobile-->
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+	<body>
+		<nav class="nav-extended teal lighten-2">
+			<div class="nav-wrapper">
+				<a href="index.html" class="brand-logo">新增食譜</a>
+				<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="index.html">食譜列表</a></li>
+					<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+					<li><a href="playlists.html">精選播放清單</a></li>
+					<li><a href="shops.html">附近商店</a></li>
+				</ul>
+			</div>
+		</nav>
+		<ul class="sidenav" id="mobile-demo">
+			<li><a href="index.html">食譜列表</a></li>
+			<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+			<li><a href="playlists.html">精選播放清單</a></li>
+			<li><a href="shops.html">附近商店</a></li>
+		</ul>
+		<div class="row">
+			<form class="col s12">
+				<div class="row">
+					<div class="input-field col s6">
+					  <input id="name" type="text" class="validate">
+					  <label for="name">名稱</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s6">
+						<select id="category">
+							<option value="main">主餐</option>
+							<option value="soup">湯品</option>
+							<option value="dessert">點心</option>
+							<option value="other">其他</option>
+						</select>
+						<label>分類</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s6">
+					  <input id="img" type="text" class="validate">
+					  <label for="img">圖片來源</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<textarea id="ingrediant" class="materialize-textarea"></textarea>
+						<label for="ingrediant">所需食材</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<textarea id="step" class="materialize-textarea"></textarea>
+						<label for="step">步驟</label>
+					</div>
+				</div>
+			</form>
+		</div>
+		<a class="waves-effect waves-light btn" href="javascript:Submit()"><i class="material-icons right">chevron_right</i>新增</a>
+		<script type="text/javascript">
+			function Submit(){
+				var name=document.getElementById("name").value;
+				name=name.trim();
+				name=name.replace(/ /g,"+");
+				var category=document.getElementById("category").value;
+				var img=document.getElementById("img").value;
+				img=img.trim();
+				var ingrediant=document.getElementById("ingrediant").value;
+				ingrediant=ingrediant.trim();
+				ingrediant=ingrediant.replace(/\n/g,"%0A");
+				ingrediant=ingrediant.replace(/ /g,"+");
+				var step=document.getElementById("step").value;
+				step=step.trim();
+				step=step.replace(/\n/g,"%0A");
+				step=step.replace(/ /g,"+");
+				if(name=="")
+					window.alert("名稱不可空白");
+				else if(ingrediant=="")
+					window.alert("所需食材不可空白");
+				else if(step=="")
+					window.alert("步驟不可空白");
+				else{
+					var url="https://docs.google.com/forms/d/e/1FAIpQLSf0hm94FXvGKb68iG4IEoRlTtVHYUkbh3MRuXJ7gaHlhZSzCA/formResponse?usp=pp_url&entry.1948499303="+name+"&entry.1600736798="+category+"&entry.1872532240="+img+"&entry.1588627221="+ingrediant+"&entry.990044352="+step;
+					window.open(url);
+					window.location.href="index.html";
+				}
+			}	
+		</script>
+  		<!--JavaScript at end of body for optimized loading-->
+	    <script type="text/javascript" src="js/materialize.min.js"></script>
+	    <script>
+	    	document.addEventListener('DOMContentLoaded', function() {
+				var elems = document.querySelectorAll('select');
+				var instances = M.FormSelect.init(elems,"");
+			});
+	    </script>
+	</body>
+</html>

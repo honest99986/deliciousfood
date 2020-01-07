@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>附近商店列表</title>
+	<meta charset="utf-8">
+	<!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+    <link type="text/css" rel="stylesheet" href="main.css" media="screen,projection"/>
+</head>
+<body>
+	<nav class="nav-extended teal lighten-2">
+		<div class="nav-wrapper">
+			<a href="index.html" class="brand-logo">附近商店列表</a>
+			<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+			<ul id="nav-mobile" class="right hide-on-med-and-down">
+				<li><a href="index.html">食譜列表</a></li>
+				<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+				<li><a href="playlists.html">精選播放清單</a></li>
+				<li><a href="shops.html">附近商店</a></li>
+			</ul>
+		</div>
+	</nav>
+	<ul class="sidenav" id="mobile-demo">
+		<li><a href="index.html">食譜列表</a></li>
+		<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+		<li><a href="playlists.html">精選播放清單</a></li>
+		<li><a href="shops.html">附近商店</a></li>
+	</ul>
+	<div class="row">
+		<div class="col s4 offset-s4">
+			<div id="showShops" style="visibility: hidden;"></div>
+		</div>	
+	</div>
+	<ul class="collection">
+		<div id="shops"></div>
+		<a href="javascript:AddShops()">
+			<li class="collection-item avatar">
+				<i class="material-icons circle">add_circle</i>
+				<span class="title"><b>新增商店</b></span>
+				<i class="material-icons secondary-content" id="addShopsIcon">keyboard_arrow_right</i>
+			</li>
+		</a>
+	</ul>
+	<div class="row" id="addShops" style="visibility: hidden;">
+		<form class="col s12">
+			<div class="row">
+				<div class="input-field col s6">
+				  <input id="name" type="text" class="validate">
+				  <label for="name">店名</label>
+				</div>
+				<div class="input-field col s6">
+				  <input id="subname" type="text" class="validate">
+				  <label for="subname">門市</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+				  <input id="address" type="text" class="validate">
+				  <label for="address">地址</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s6">
+				  <input id="lat" type="text" class="validate">
+				  <label for="lat">緯度</label>
+				</div>
+				<div class="input-field col s6">
+				  <input id="lon" type="text" class="validate">
+				  <label for="lon">經度</label>
+				</div>
+			</div>
+		</form>
+		<a class="waves-effect waves-light btn" href="javascript:Submit()"><i class="material-icons right">chevron_right</i>新增</a>
+	</div>
+	<script type="text/javascript">
+		function AddShops(){
+			if(document.getElementById("addShops").style.visibility=="hidden"){
+				document.getElementById("addShops").style.visibility="visible";
+				document.getElementById("addShopsIcon").innerHTML="keyboard_arrow_down";
+			}
+			else{
+				document.getElementById("addShops").style.visibility="hidden";
+				document.getElementById("addShopsIcon").innerHTML="keyboard_arrow_right";
+			}
+		}
+		function Submit(){
+			var name=document.getElementById("name").value;
+			name=name.trim();
+			name=name.replace(/ /g,"+");
+			var subname=document.getElementById("subname").value;
+			subname=subname.trim();
+			subname=subname.replace(/ /g,"+");
+			var address=document.getElementById("address").value;
+			address=address.trim();
+			address=address.replace(/ /g,"+");
+			var lat=document.getElementById("lat").value;
+			lat=lat.trim();
+			var lon=document.getElementById("lon").value;
+			lon=lon.trim();
+			if(name=="")
+				window.alert("店名不可空白");
+			else if(address=="")
+				window.alert("地址不可空白");
+			else if(lat=="")
+				window.alert("緯度不可空白");
+			else if(lon=="")
+				window.alert("經度不可空白");
+			else{
+				var url="https://docs.google.com/forms/d/e/1FAIpQLSfnFUgTv4gwWHWi_9hPFPM1o-dkuT4_Obva5Q2gbV4coWOV9w/formResponse?usp=pp_url&entry.1369850351="+name+"&entry.1640445782="+subname+"&entry.141181592="+address+"&entry.1522398920="+lat+"&entry.1721161202="+lon;
+				window.open(url);
+				window.location.href="";
+			}
+		}	
+	</script>
+	<!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript">
+    	var data;
+		var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1CGFQLyM3uPM1xFQcJ388ZaXTChqbPf8YzxqQAmVtQLU/edit?usp=sharing';
+		function init() {
+		Tabletop.init( { key: publicSpreadsheetUrl,
+		    callback: ShowShops,
+		    simpleSheet: true } )
+		}
+    	function ShowShops(tempData,tabletop){			
+			data=tempData;
+			console.log(data);
+			var text="";
+			for(var i=0;i<data.length;i++){
+				text+="<a href='javascript:ShowShopsInfo("+i+")'>";
+				text+="<li class='collection-item avatar'>";
+				text+="<i class='material-icons circle'>location_on</i>";
+				text+="<span class='title'><b>"+data[i].name+"</b></span>";
+				text+="<p>"+data[i].subname+"<br>"+data[i].address+"</p>";
+				text+="<i class='material-icons secondary-content'>chevron_right</i>";
+				text+="</li>";
+				text+="</a>";	
+			}
+			document.getElementById("shops").innerHTML=text;
+    	}
+    	document.addEventListener("DOMContentLoaded",init());
+    	function ShowShopsInfo(id){
+    		var text="";
+    		text+="<iframe style='width: 100%;' src='https://www.google.com.tw/maps?f=q&hl=zh-TW&output=embed&z=16&q="+data[id].lat+","+data[id].lon+"'></iframe>"
+    		text+="<h5><b>"+data[id].name+"</b></h5>";
+    		text+="<p>"+data[id].subname+"</p>";
+    		text+="<p>"+data[id].address+"</p>";
+    		document.getElementById("showShops").style.visibility="visible";
+    		document.getElementById("showShops").style.margin="10px";
+    		document.getElementById("showShops").style.border="5px dotted #4db6ac"
+    		document.getElementById("showShops").style.padding="10px";
+    		document.getElementById("showShops").innerHTML=text;
+    	}
+    </script>
+</body>
+</html>

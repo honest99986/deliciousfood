@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>精選影片</title>
+		<meta charset="utf-8">
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+		<!-- Owl Stylesheets -->
+    	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+	    <!-- javascript -->
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.js"></script>
+		<!--Let browser know website is optimized for mobile-->
+      	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      	<script>
+      		// 取得網址裡的參數 
+			function GetUrlVar(VarName){
+				name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+				var regexS = "[\\?&]" + VarName + "=([^&#]*)";
+				var regex = new RegExp(regexS);
+				var results = regex.exec(window.location.href);
+				if (results == null)
+				 	return "";
+				else
+					return results[1];
+			}		  
+			// 要先取得網址裡的路徑起點終點經緯度參數 
+			var playlistId = decodeURIComponent(GetUrlVar('id'));
+			var xmlhttp = new XMLHttpRequest();
+			var url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId="+playlistId+"&key=AIzaSyCPPGtDuP16XDumqKBPtr78hYRQPzNO9CY&maxResults=50";
+			var data;
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					data = JSON.parse(xmlhttp.responseText);
+					ShowVideos(data);
+					Videos(0);
+				}
+			}
+			xmlhttp.open("GET", url, true);
+			xmlhttp.send();
+			function ShowVideos(data) {
+				console.log(data);
+				var text = "";
+				text+="<div class='owl-carousel owl-theme'>";
+				for(var i=0;i<data.items.length;i++){
+					text+="<div class='item'>";
+					text+="<a href='javascript:Videos("+i+")'>";
+					if(data.items[i].snippet.thumbnails.standard!=undefined)
+						text+="<img src='"+data.items[i].snippet.thumbnails.standard.url+"'>";
+					else if(data.items[i].snippet.thumbnails.high!=undefined)
+						text+="<img src='"+data.items[i].snippet.thumbnails.high.url+"'>";
+					else
+						text+="<img src='"+data.items[i].snippet.thumbnails.default.url+"'>";
+					text+="</a>";
+					text+="</div>";
+				}
+				text+="</div'>";
+				document.getElementById("youtubeImage").innerHTML = text;
+				$(document).ready(function() {
+		            var owl = $('.owl-carousel');
+		            owl.owlCarousel({
+		                items: 5,
+		                loop: true,
+		                margin: 10,
+		                autoplay: false,
+		                autoplayTimeout: 1000,
+		                autoplayHoverPause: true
+		            });
+	            })
+			}
+			function Videos(id){
+				document.getElementById("youtube").classList.add("video-container");
+				document.getElementById("youtube").innerHTML="<iframe src='https://www.youtube.com/embed/"+data.items[id].snippet.resourceId.videoId+"?rel=0' frameborder='0' allowfullscreen><ifarme>";
+			}
+		</script>
+	<body>
+		<nav class="nav-extended teal lighten-2">
+			<div class="nav-wrapper">
+				<a href="index.html" class="brand-logo">精選影片</a>
+				<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="index.html">食譜列表</a></li>
+					<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+					<li><a href="playlists.html">精選播放清單</a></li>
+				<li><a href="shops.html">附近商店</a></li>
+				</ul>
+			</div>
+		</nav>
+		<ul class="sidenav" id="mobile-demo">
+			<li><a href="index.html">食譜列表</a></li>
+			<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+			<li><a href="playlists.html">精選播放清單</a></li>
+			<li><a href="shops.html">附近商店</a></li>
+		</ul>
+		<script>
+           
+        </script>
+		<div id="youtube" style="margin-right: 10%; margin-left: 10%; margin-top: 10px; margin-bottom: 10px;"></div>
+		<div id="youtubeImage" style="text-align: center; margin-top: 10px;"></div>
+  		<!--JavaScript at end of body for optimized loading-->
+	    <script type="text/javascript" src="js/materialize.min.js"></script>
+	</body>
+</html>

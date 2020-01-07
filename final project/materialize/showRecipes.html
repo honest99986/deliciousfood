@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>&nbsp;</title>
+	<meta charset="utf-8">
+	<!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+</head>
+<body>
+	<nav class="nav-extended teal lighten-2">
+		<div class="nav-wrapper">
+			<a id="logo" href="index.html" class="brand-logo">&nbsp;</a>
+			<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+			<ul id="nav-mobile" class="right hide-on-med-and-down">
+				<li><a href="index.html">食譜列表</a></li>
+				<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+				<li><a href="playlists.html">精選播放清單</a></li>
+				<li><a href="shops.html">附近商店</a></li>
+			</ul>
+		</div>
+	</nav>
+	<ul class="sidenav" id="mobile-demo">
+		<li><a href="index.html">食譜列表</a></li>
+		<li><a href="pixnetHot.html">Pixnet 熱門食譜</a></li>
+		<li><a href="playlists.html">精選播放清單</a></li>
+		<li><a href="shops.html">附近商店</a></li>
+	</ul>
+	<div id="recipe"></div>
+	<!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript">
+    	var data;
+    	var id;
+		var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1jtD4hbCmpvn_ZaC1bsKzTh_Rdg22cVdkul7A3adA4Ks/edit?usp=sharing';
+		function init() {
+			Tabletop.init( { key: publicSpreadsheetUrl,
+			    callback: ShowRecipe,
+			    simpleSheet: true } )
+		}
+    	function ShowRecipe(tempData,tabletop){			
+    		id=GetUrlVar("id");
+			data=tempData;
+			console.log(data);
+			document.title=data[id].name;
+			document.getElementById("logo").innerHTML=data[id].name;
+			var ingrediant=data[id].ingrediant;
+			ingrediant=ingrediant.replace(/\n/g,"<br>");
+			var step=data[id].step;
+			step=step.replace(/\n/g,"<br>");
+			var text="";
+			if(data[id].img!=""){
+				text+="<div class='row'>";
+				text+="<div class='col s4 offset-s4'>"
+				text+="<div class='card'>";
+				text+="<div class='card-image'>";
+				text+="<img src='"+data[id].img+"'>";
+				text+="</div>";
+				text+="<div class='card-content'>";
+				text+="<h5><b>"+data[id].name+"</b></h5>";
+				text+="</div>";
+				text+="</div>";
+				text+="</div>";
+				text+="</div>";
+			}
+			text+="<ul class='collapsible'>";
+			text+="<li>";
+			text+="<div class='collapsible-header'><i class='material-icons'>filter_drama</i><b>所需食材</b></div>";
+			text+="<div class='collapsible-body'><span>"+ingrediant+"</span></div>";
+			text+="</li>";
+			text+="<li>";
+			text+="<div class='collapsible-header'><i class='material-icons'>filter_drama</i><b>步驟</b></div>";
+			text+="<div class='collapsible-body'><span>"+step+"</span></div>";
+			text+="</li>";
+			text+="<li>";
+			text+="<a style='color: #000000;' href='pixnetSearch.html?id="+id+"'>";
+			text+="<div class='collapsible-header'><i class='material-icons'>filter_drama</i><b>於Pixnet搜尋更多相關食譜</b></div>";
+			text+="</a>";
+			text+="</li>";
+			text+="</ul>";
+			document.getElementById("recipe").innerHTML=text;
+			var elems = document.querySelectorAll('.collapsible');
+			var instances = M.Collapsible.init(elems, "");
+    	}
+    	function GetUrlVar(VarName){
+			name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+			var regexS = "[\\?&]" + VarName + "=([^&#]*)";
+			var regex = new RegExp(regexS);
+			var results = regex.exec(window.location.href);
+			if (results == null)
+			 	return "";
+			else
+				return results[1];
+		}
+    	document.addEventListener("DOMContentLoaded",init());
+    </script>
+</body>
+</html>
